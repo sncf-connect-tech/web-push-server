@@ -1,2 +1,38 @@
-# webPushServer
-A simple web push server for Web Push W3C spec https://www.w3.org/TR/push-api/
+# web-push-server
+
+## Description
+
+A simple Web Push Server
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
