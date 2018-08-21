@@ -51,6 +51,9 @@ AUTH_SECRET=this_is_my_secret_key
 VAPID_SUBJECT=mailto:toto@gmail.com
 VAPID_PUBLIC_KEY=BBYNKgeEXi0BMbfglL_SUl-Xf2To9EVPT1Qij5J3y-x3d95LylSzdGJT3trLjW4q_eRo9aAZeVezcOK4JpxmBbI
 VAPID_PRIVATE_KEY=bETOhh-57fLf1MaEPciA9Mi1pTZYsBIHFwIV67KJcr4
+NOTIFME_HISTORY=true
+NOTIFME_HISTORY_URL='http://localhost'
+NOTIFME_HISTORY_AUTH='123456789'
 ```
 
 ## Example Web Client Subscribe
