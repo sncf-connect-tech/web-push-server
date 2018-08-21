@@ -6,10 +6,14 @@ import {Unsubscribe} from "./types/unsubscribe";
 
 let webPush = require("web-push");
 let util = require("util");
+let request = require('request-promise-native');
 
 const mongoose = require('mongoose');
 
 let SubscribeModel;
+let notifmeHistory;
+let notifmeHistoryUrl;
+let notifmeHistoryAuth;
 
 @Injectable()
 export class NotificationService {
@@ -28,6 +32,9 @@ export class NotificationService {
             config.get('VAPID_PRIVATE_KEY')
         );
         SubscribeModel = new Subscribe().getModelForClass(Subscribe, {existingConnection: mongoose});
+        notifmeHistory = config.get('NOTIFME_HISTORY');
+        notifmeHistoryUrl = config.get('NOTIFME_HISTORY_URL');
+        notifmeHistoryAuth = config.get('NOTIFME_HISTORY_AUTH');
     }
 
     async subscribe(userSubscription: Subscribe): Promise<string> {
@@ -86,6 +93,35 @@ export class NotificationService {
                         Logger.log("Status : "+util.inspect(response.statusCode));
                         Logger.log("Headers : "+JSON.stringify(response.headers));
                         Logger.log("Body : "+JSON.stringify(response.body));
+                        if(notifmeHistory){
+                            let date = new Date();
+                            let options = {
+                                method: 'POST',
+                                uri: notifmeHistoryUrl+'/api/notifications',
+                                headers: {
+                                    'authorization': notifmeHistoryAuth
+                                },
+                                body: {
+                                    channel: notificationBody.appID,
+                                    datetime: date.toISOString(),
+                                    title: notificationBody.title,
+                                    text: notificationBody.message,
+                                    tags: [notificationBody.appID, pushSubscription.idUser],
+                                    user: {
+                                        id: pushSubscription.idUser
+                                    },
+                                    details: notificationBody.data
+                                },
+                                json: true
+                            };
+                            request(options)
+                                .then(function (parsedBody) {
+                                    Logger.log('Notification history ok', parsedBody);
+                                })
+                                .catch(function (err) {
+                                    Logger.log('Notification history fail', err);
+                                });
+                        }
                     }).catch((error) =>{
                         Logger.log(error);
                         Logger.log("Status : "+util.inspect(error.statusCode));
